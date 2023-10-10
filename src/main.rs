@@ -1,6 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 use lib::get_card_nr;
 use rand::seq::SliceRandom;
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 =======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 use rand::{Rng};
@@ -9,6 +12,7 @@ use std::time::Instant;
 use std::sync::{Arc, Mutex};
 use std::thread::{self, LocalKey};
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 mod lib;
 mod cpu;
@@ -26,6 +30,8 @@ fn playGame(players: &Vec<Box<dyn cpu::Player>>, verbose: bool, randomStart: boo
     if verbose {
         println!("First card is {}: {}\n", playStack[0], lib::get_name(playStack[0]));
 =======
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 fn sum(cards: &Vec<bool>) -> u8 {
     let mut count: u8 = 0;
     for card in cards.iter() {
@@ -243,13 +249,20 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
     playStack.push(drawCardsFor(1, &mut stack, None)[0]);
     if verbose {
         println!("First card is {}: {}\n", playStack[0], getName(playStack[0]));
+<<<<<<< HEAD
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
+=======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
     }
 
     let mut playerCards: Vec<Vec<u8>> = Vec::new();
     for _ in 0..players.len() { //we are not going to talk about this code
 <<<<<<< HEAD
+<<<<<<< HEAD
         playerCards.push(lib::draw_cards_for(7, &mut stack, Some(&mut playStack)));
+=======
+        playerCards.push(drawCardsFor(7, &mut stack, Some(&mut playStack)));
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 =======
         playerCards.push(drawCardsFor(7, &mut stack, Some(&mut playStack)));
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
@@ -258,6 +271,7 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
 
 
     let mut toDraw: u8 = 0;
+<<<<<<< HEAD
 <<<<<<< HEAD
     let mut reverse_order: bool = rng.gen_bool(0.5);
     let mut skip_rev: usize = 0;
@@ -279,6 +293,8 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
             }
             let p = &players[i];
 =======
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
     let mut skip: bool = randomStart && rng.gen_bool(0.5);
     let mut othersHave: Vec<u8> = (0..players.len() as u8).collect();
     loop {
@@ -287,12 +303,16 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
                 skip = false;
                 continue;
             }
+<<<<<<< HEAD
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
+=======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
             loop { //loop is there for 7 card
                 for (i, _) in players.iter().enumerate() {
                     othersHave[i] = playerCards[i].len() as u8;
                 }
                 let lastCard: u8 = *playStack.last().unwrap();
+<<<<<<< HEAD
 <<<<<<< HEAD
 
                 let playable: Vec<u8> = playerCards[i].iter().filter(|&&card| lib::can_card_stack(card, lastCard)).map(|c| *c).collect();
@@ -305,6 +325,8 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
                     }
                     if !lib::can_card_stack(*playerCards[i].last().unwrap(), lastCard) {
 =======
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
                 
                 if !playerCards[i].iter().any(|x| canCardStack(*x, lastCard)) { //if cannot place a card then draw one
                     playerCards[i].push(drawCardsFor(1, &mut stack, Some(&mut playStack))[0]);
@@ -312,11 +334,15 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
                         println!("{} draw a card because he can't play.", i);
                     }
                     if !canCardStack(*playerCards[i].last().unwrap(), lastCard) {
+<<<<<<< HEAD
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
+=======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
                         if verbose {
                             println!("and he couldn't he play the picked up card.");
                         }
                         continue 'player_turns; //next player is.
+<<<<<<< HEAD
 <<<<<<< HEAD
                     } else {
                         turn = *playerCards[i].last().unwrap();
@@ -328,12 +354,17 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
                 if verbose {
                     println!("{} placed card: {}: {}\n", i, turn, lib::get_name(turn));
 =======
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
                     }
                 }
     
                 let turn: u8 = p.maketurn(i, &playerCards[i], lastCard, stack.len() as u8, &othersHave, toDraw);
                 if verbose {
                     println!("{} placed card: {}: {}\n", i, turn, getName(turn));
+<<<<<<< HEAD
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
+=======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
                 }
                 playStack.push(turn);
@@ -345,6 +376,7 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
                 }
     
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if lib::get_card_nr(turn) == 1 {
                     toDraw += 2;
                 } else if lib::get_card_nr(turn) == 13 {
@@ -352,18 +384,24 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
                 } else if toDraw > 0 { //make the player pick up the cards.
                     playerCards[i].extend(&lib::draw_cards_for(toDraw, &mut stack, Some(&mut playStack)));
 =======
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
                 if getCardNr(turn) == 1 {
                     toDraw += 2;
                 } else if getCardNr(turn) == 13 {
                     toDraw += 5;
                 } else if toDraw > 0 { //make the player pick up the cards.
                     playerCards[i].extend(&drawCardsFor(toDraw, &mut stack, Some(&mut playStack)));
+<<<<<<< HEAD
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
+=======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
                     if verbose {
                         println!("{} picked up {} cards.", i, toDraw);
                     }
                     toDraw = 0;
                 }
+<<<<<<< HEAD
 <<<<<<< HEAD
                 if lib::get_card_nr(turn) == 0 { //Ace, flip the pace
                     reverse_order = !reverse_order;
@@ -374,11 +412,16 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
                 if lib::get_card_nr(turn) == 7 { //8 wait
                     skip = 1;
 =======
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
                 if getCardNr(turn) == 6 { //7 Seven in heaven, the game unfolds, lay another card, see what it holds. -ChatGPT
                     continue;
                 }
                 if getCardNr(turn) == 7 { //8 wait
                     skip = true;
+<<<<<<< HEAD
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
+=======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
                 }
                 break;
@@ -386,6 +429,7 @@ fn playGame(players: &Vec<Box<dyn Player>>, verbose: bool, randomStart: bool) ->
         }
     }
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 const n_players: usize = 2;
 fn test_strategy(total_games: i32, cards_order: [u8; 54]) -> i32 {
@@ -410,6 +454,8 @@ fn test_strategy(total_games: i32, cards_order: [u8; 54]) -> i32 {
             //[339692, 203153, 226660, 230495]
 
 =======
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 
 fn main() {
     println!("Pesten: with the rules: ");
@@ -433,6 +479,9 @@ fn main() {
     
             let mut wins_local = [0;2];
     
+<<<<<<< HEAD
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
+=======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
             for _j in 0..iterations_per_thread {
                 let win = playGame(&players, false, true);
@@ -446,6 +495,7 @@ fn main() {
         });
         handles.push(handle);
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     for handle in handles { //wait for every thread to finish.
@@ -506,6 +556,8 @@ fn figure_out_cards_order() {
     }
     println!("{:?}", cards_order);
 =======
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
     for handle in handles { //wait for every thread to finish.
         handle.join().unwrap();
     }
@@ -522,5 +574,8 @@ fn figure_out_cards_order() {
 
     println!("{:?}", wins);
     println!("winrate p1: {}", (wins[0] as f32)/1_000_000f32*2f32-1f32)
+<<<<<<< HEAD
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
+=======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 }

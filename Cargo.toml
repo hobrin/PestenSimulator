@@ -6,9 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [profile.release]
 debug = 1
 
+=======
+>>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 =======
 >>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 [dependencies]
