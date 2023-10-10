@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 use lib::get_card_nr;
 use rand::seq::SliceRandom;
-=======
->>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
-=======
->>>>>>> db1f889b036d83291c87ffda4840e9d97c634095
 use rand::{Rng};
 use std::io;
 use std::time::Instant;
