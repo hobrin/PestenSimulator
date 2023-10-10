@@ -1,0 +1,176 @@
+use rand::Rng;
+use std::io;
+
+fn sum(cards: &Vec<bool>) -> u8 {
+    let mut count: u8 = 0;
+    for card in cards.iter() {
+        if *card {count+=1;}
+    }
+    count
+}
+
+fn getCardNr(card: u8) -> u8 {
+    if card < 52 {card%13} else {13}
+}
+fn getCardClass(card: u8) -> u8 {
+    card / 13 //return 4 for joker
+}
+fn getName(card: u8) -> String {
+    if card < 52 {
+        let card_number = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"]
+            .get(usize::try_from(getCardNr(card)).unwrap())
+            .unwrap();
+
+        let card_class = ["Clubs", "Diamonds", "Hearts", "Spades"]
+            .get(usize::try_from(getCardClass(card)).unwrap())
+            .unwrap();
+        format!("{} of {}", card_number, card_class)
+    } else {
+        format!("joker")
+    }
+}
+
+fn canCardStack(card: u8, prevCard: u8) -> bool {
+    card >= 52 || prevCard >= 52 || getCardClass(card) == getCardClass(prevCard) || getCardNr(card) == getCardNr(prevCard)
+}
+
+fn drawCardsFor(nToDraw: u8, mut fromStack: &[bool], mut toStack: &Vec<bool>) {
+    let mut i: u8 = 0;
+    while i < nToDraw {
+        let mut card: u8 = rand::thread_rng().gen_range(0..54);
+        
+        cards[rng.gen_range(0..54)] = false;
+    }
+}
+
+trait Player {
+    fn maketurn(&self, cardsInHand: &Vec<bool>, onstack: u8, instack: u8, cardsInOtherPlayers: &Vec<u8>) -> u8;
+}
+
+struct ConsolePlayer {
+
+}
+impl ConsolePlayer {
+    fn new() -> ConsolePlayer {
+        ConsolePlayer{}
+    }
+}
+impl Player for ConsolePlayer {
+    fn maketurn(&self, cardsInHand: &Vec<bool>, onstack: u8, instack: u8, cardsInOtherPlayers: &Vec<u8>) -> u8 {
+        
+        println!("Top: {}: {}\n", onstack, getName(onstack));
+        
+
+        println!("You have these cards:");
+        for (i, has) in cardsInHand.iter().enumerate() {
+            if *has {
+                println!("{}: {}", i, getName(i as u8));
+            }
+        }
+        println!("Please select one card (number):");
+        while true {
+            let mut input = String::new();
+            io::stdin()
+                .read_line(&mut input)
+                .expect("Failed to read input.");
+
+            let name = input.trim();
+            if let Ok(value) = name.parse::<u8>() {
+                if value >= 54 || !cardsInHand[value as usize] {
+                    println!("Card not in hand.");
+                    continue;
+                }
+                if !canCardStack(value, onstack) {
+                    println!("Card not stackable.");
+                    continue;
+                }
+                return value;
+            } else {
+                println!("Not a number. Please select the number of the card (in front of the card).");
+                continue;
+            }
+        }
+        0 //dumb dumb compiler
+    }
+}
+struct RandomPlayer {
+
+}
+impl RandomPlayer {
+    fn new() -> RandomPlayer {
+        RandomPlayer{}
+    }
+}
+impl Player for RandomPlayer {
+    fn maketurn(&self, cardsInHand: &Vec<bool>, onstack: u8, instack: u8, cardsInOtherPlayers: &Vec<u8>) -> u8 {
+        let mut playableCards: Vec<u8> = Vec::new();
+        for (card, has) in cardsInHand.iter().enumerate() {
+            if *has {
+                if canCardStack(card.try_into().unwrap(), onstack) {
+                    playableCards.push(card.try_into().unwrap());
+                }
+            }
+        }
+        if playableCards.len() < 0 {
+            return 255;
+        }
+        playableCards[rand::thread_rng().gen_range(0..playableCards.len()) as usize]
+    }
+}
+
+fn main() {
+    let mut stack: [bool; 54] = [true; 54];
+
+    let mut rng = rand::thread_rng();
+
+    let consoleP: ConsolePlayer = ConsolePlayer::new();
+    let randomP: RandomPlayer = RandomPlayer::new();
+    let mut players: Vec<Box<dyn Player>> = Vec::new();
+    players.push(Box::new(consoleP));
+    players.push(Box::new(randomP));
+    let mut playerCards: Vec<Vec<bool>> = Vec::new();
+    for _ in 0..players.len() { //we are not going to talk about this code
+        let mut cards: Vec<bool> = stack.to_vec();
+        while sum(&cards) > 7 {
+            cards[rng.gen_range(0..54)] = false;
+        }
+        for (card, has) in cards.iter().enumerate() {
+            if *has {
+                stack[card] = false;
+            }
+        }
+        playerCards.push(cards.to_vec());
+    }
+    let mut playStack: Vec<u8> = Vec::new();
+    while playStack.len() == 0 {
+        let card: u8 = rng.gen_range(0..54);
+        if stack[card as usize] {
+            stack[card as usize] = false;
+            playStack.push(card);
+        }
+    }
+    let mut toDraw: u8 = 0;
+    while true {
+        for (i, p) in players.iter().enumerate() { //each player takes a turn
+            let mut othersHave: Vec<u8> = Vec::new();
+            for (i, _) in players.iter().enumerate() {
+                othersHave.push(sum(&playerCards[i]));
+            }
+            let lastCard: u8 = playStack[playStack.len()-1];
+            
+            let turn: u8 = p.maketurn(&playerCards[i], lastCard, sum(&stack.to_vec()), &othersHave);
+            playStack.push(turn);
+            playerCards[i][turn as usize] = false;
+            if getCardNr(turn) == 2 {
+                toDraw += 2;
+            } else if getCardNr(turn) == 13 {
+                toDraw += 5;
+            } else if toDraw > 0 { //make the player pick up the cards.
+
+
+
+                toDraw = 0;
+            }
+        }
+    }
+}
